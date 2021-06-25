@@ -44,28 +44,32 @@ class CreateNote(Mutation):
         return CreateNote(id=new_note.id, title=new_note.title, description=new_note.description)
 
 
-class Mutation(ObjectType):
-    create_note = CreateNote.Field()
-
-"""
 class DeleteNote(Mutation):
     id = graphene.Int()
-    title = graphene.String()
-    description = graphene.String()
 
     class Arguments:
-        id = graphene.Int()
+        id = graphene.String()
 
-        def mutate(self, id):
-            session = session_local()
-            note = session.query(Notes).get(id)
-            session.delete(note)
-            session.commit()
-            return DeleteNote(id=note.id)
+    def mutate(self, info, id):
+        session = session_local()
+        delete_note = session.query(Notes).get(id)
+        session.delete(delete_note)
+        session.commit()
+        return DeleteNote(id=id)
 
 
-class DeletNote(ObjectType):
-    delete_note = DeleteNote.id
+class Mutation(ObjectType):
+    create_note = CreateNote.Field()
+    delete_note = DeleteNote.Field()
+
+
+"""
+@app.delete("/todo/{id}", tags=["todos"])
+async def delete_todo(id: int):
+    note = db.session.query(Note).get(id)
+    db.session.delete(note)
+    db.session.commit()
+    return note
 """
 
 app = FastAPI()
