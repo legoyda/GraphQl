@@ -10,6 +10,7 @@ uvicorn = "*"
 sqlalchemy = "*"
 python-dotenv = "==0.15.0"
 fastapi-sqlalchemy = "*"
+serializers = "*"
 
 [dev-packages]
 
