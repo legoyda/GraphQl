@@ -58,6 +58,7 @@ class DeleteNote(Mutation):
         return DeleteNote(id=id)
 
 
+
 class Mutation(ObjectType):
     create_note = CreateNote.Field()
     delete_note = DeleteNote.Field()
