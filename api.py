@@ -19,12 +19,14 @@ class NotesType(ObjectType):
 
 
 class View(ObjectType):
-    get_notes = List(NotesType)
+    get_notes = List(NotesType, search=graphene.String())
 
-    def resolve_get_notes(self, info):
+    def resolve_get_notes(self, info, search=None, **kwargs):
         session = session_local()
-        result = session.query(model.Notes).all()
-        return result
+        result_query = session.query(model.Notes)
+        if search:
+            result_query = result_query.filter(Notes.title.ilike(search))
+        return result_query.all()
 
 
 class CreateNote(Mutation):
@@ -56,7 +58,6 @@ class DeleteNote(Mutation):
         session.delete(delete_note)
         session.commit()
         return DeleteNote(id=id)
-
 
 
 class Mutation(ObjectType):
